@@ -1,4 +1,21 @@
 // Copyright 2021 NNTU-CS
+void sort(int* arr, int size) {
+    int i = 0, j = size - 1;
+    int mid = arr[size / 2];
+    do {
+        while (arr[i] < mid) i++;
+        while (arr[j] > mid) j--;
+        if (i <= j) {
+            int tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+            i++;
+            j--;
+        }
+    } while (i <= j);
+    if (j > 0) sort(arr, j + 1);
+    if (i < size) sort(&arr[i], size - i);
+}
 int cbinsearch(int* arr, int size, int value) {
     int counter = 0;
     int ind, i = 0, j = size - 1, mid = 0, midVal;
@@ -7,11 +24,9 @@ int cbinsearch(int* arr, int size, int value) {
         midVal = arr[mid];
         if (value < midVal) {
             j = mid - 1;
-        }
-        else if (midVal < value) {
+        } else if (midVal < value) {
             i = mid + 1;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -29,6 +44,7 @@ int cbinsearch(int* arr, int size, int value) {
     return counter;
 }
 int countPairs1(int* arr, int len, int value) {
+    sort(arr, len);
     int count = 0;
     for (int i = 0; i < len; i++) {
         for (int j = i+1; j < len; j++) {
@@ -38,19 +54,22 @@ int countPairs1(int* arr, int len, int value) {
     return count;
 }
 int countPairs2(int* arr, int len, int value) {
-    int count = 0;
-    for (int i = 0; i < len; i++) {
-        for (int j = len - 1; j > i; j--) {
+    sort(arr, len);
+    int count = 0, int max = len - 1;
+    while (arr[max] > value) max--;
+    for (int i = 0; i < max; i++) {
+        for (int j = i+1; j < max; j++) {
             if (arr[i] + arr[j] == value) count++;
         }
     }
     return count;
 }
 int countPairs3(int* arr, int len, int value) {
+    sort(arr, len);
     int count = 0;
     for (int i = 0; i < len; i++) {
         int num = value - arr[i], count1;
-        count += cbinsearch(&arr[i + 1], len - i, num);
+        count += cbinsearch(&arr[i + 1], len - i - 1, num);
     }
     return count;
 }
